@@ -2,35 +2,24 @@ import pandas as pd
 import yfinance as yf
 import requests
 
-from model import QINFTLModel 
+def fetch_and_save_data():
+    # 1. جلب بيانات مالية (S&P 500)
+    print("Fetching Financial Data...")
+    df_finance = yf.download('^GSPC', start='2020-01-01', end='2025-12-31')
+    df_finance.to_csv('data/financial_data.csv')
 
-def get_financial_data():
-    
-    data = yf.download('^GSPC', start='2015-01-01', end='2025-12-31')
-    return data[['Close']]
-
-def get_weather_data():
-    
+    # 2. جلب بيانات الطقس
+    print("Fetching Weather Data...")
     url = "https://archive-api.open-meteo.com/v1/archive?latitude=51.5074&longitude=-0.1278&start_date=2020-01-01&end_date=2025-12-31&hourly=temperature_2m"
-    r = requests.get(url).json()
-    df = pd.DataFrame({'Temp': r['hourly']['temperature_2m']})
-    return df
-
-def train_model(dataset_name):
+    response = requests.get(url)
+    weather_json = response.json()
+    df_weather = pd.DataFrame({
+        'time': weather_json['hourly']['time'],
+        'temp': weather_json['hourly']['temperature_2m']
+    })
+    df_weather.to_csv('data/weather_data.csv', index=False)
     
-    print(f"Starting training on {dataset_name} dataset...")
-    
-    if dataset_name == "finance":
-        df = get_financial_data()
-    elif dataset_name == "weather":
-        df = get_weather_data()
-    
-    # QI-NFTL
-    model = QINFTLModel(n_inputs=5, n_rules=10)
-    # model.fit(df) ...
-    print(f"Training completed for {dataset_name}!")
+    print("✅ All data saved to CSV files in /data folder")
 
 if __name__ == "__main__":
-   
-    train_model("finance")
-    train_model("weather")
+    fetch_and_save_data()
