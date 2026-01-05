@@ -13,3 +13,8 @@ The QI-NFTL framework addresses the curse of dimensionality in neuro-fuzzy syste
 ## Installation
 ```bash
 pip install -r requirements.txt
+
+## Citation
+If you use this code or the QI-NFTL framework in your research, please cite our paper:
+
+**Mohamed Ezzat, "A Hybrid Quantum-Inspired Neuro-Fuzzy Framework for Accurate and Uncertainty-Aware Temporal Forecasting", Submitted to Information Sciences, 2026.**
